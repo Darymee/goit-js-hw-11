@@ -1,2 +1,47 @@
 @import './common';
-@import './example';
+
+.header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  padding: 10px 0;
+  background-image: linear-gradient(
+    to right top,
+    #34e9bd,
+    #00cce4,
+    #00a9ff,
+    #007aff,
+    #2800ff
+  );
+  box-shadow: 4px 13px 8px 0px rgba(34, 60, 80, 0.2);
+}
+
+input {
+  padding: 10px 30px;
+  background-color: #ce90ed0e;
+  position: relative;
+  color: white;
+}
+
+input::placeholder {
+  color: white;
+}
+
+button {
+  cursor: pointer;
+  padding: 10px 15px;
+  position: absolute;
+  background-color: white;
+}
+
+button:hover,
+button:focus {
+  background-color: #00cce4;
+}
+
+svg {
+  position: relative;
+  width: 15px;
+  height: 15px;
+}
