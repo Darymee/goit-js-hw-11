@@ -1,14 +1,17 @@
-import axios from 'axios';
-export { fetchGallery };
+// import axios from 'axios';
+// export { fetchGallery };
 
-const BASE_URL = 'https://pixabay.com/api/';
-const KEY = '29734791-3fd561d0afce25ff9315d455c';
+// axios.defaults.baseURL = 'https://pixabay.com/api/';
+// const KEY = '29734791-3fd561d0afce25ff9315d455c';
 
-// async function fetchGallery() {
+// async function fetchGallery(query, page, perPage) {
 //   try {
-//     const response = await axios.get(`${BASE_URL}?key=${KEY}&q=`);
+//     const response = await axios.get(
+//       `?key=${KEY}&q=${query}&image_type=photo&orientation=horizontal&safesearch=true&page=${page}&per_page=${perPage}`
+//     );
 //     console.log(response);
+//     return response;
 //   } catch (error) {
-//     console.error(error);
+//     console.log(error);
 //   }
 // }
