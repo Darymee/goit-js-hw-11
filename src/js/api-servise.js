@@ -17,9 +17,9 @@ async fetchGallery() {
       `?key=${KEY}&q=${this.searchQuery}&image_type=photo&orientation=horizontal&safesearch=true&page=${this.page}&per_page=${this.perPage}`
     );
     this.incrementPage()
-    console.log(response);
-    return response.data.hits;
+    return response;
   } catch (error) {
+    Notify.info("We're sorry, but you've reached the end of search results.");
     console.log(error);
   }
 }

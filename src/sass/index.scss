@@ -1,11 +1,28 @@
 @import './common';
 
+* {
+  box-sizing: border-box;
+}
+
+body {   
+  min-width: 1200px;
+  font-family: monospace;
+
+}
+
+main {
+  background-color: #00cde416;
+  padding-left: 15px;
+  padding-right: 15px;
+}
+
 .header {
   display: flex;
   justify-content: center;
   align-items: center;
 
   padding: 10px 0;
+  margin-bottom: 15px;
   background-image: linear-gradient(
     to right top,
     #34e9bd,
@@ -17,10 +34,13 @@
   box-shadow: 4px 13px 8px 0px rgba(34, 60, 80, 0.2);
 }
 
+form {
+  display: flex;
+}
+
 input {
   padding: 10px 30px;
   background-color: #ce90ed0e;
-  position: relative;
   color: white;
 }
 
@@ -29,19 +49,91 @@ input::placeholder {
 }
 
 button {
+  display: block;
   cursor: pointer;
   padding: 10px 15px;
-  position: absolute;
   background-color: white;
-}
-
-button:hover,
-button:focus {
+  &:hover,
+&:focus {
   background-color: #00cce4;
-}
+  box-shadow: 4px 13px 8px 0px rgba(34, 60, 80, 0.2);
+}}
+
 
 svg {
   position: relative;
   width: 15px;
   height: 15px;
 }
+
+.gallery {
+  display: flex;
+  flex-wrap: wrap;
+  margin: -15px;
+}
+
+.photo-card {
+  flex-basis: calc((100% - 120px) / 4);
+  margin: 15px;
+
+display: flex;
+justify-content: center;
+align-items: center;
+text-align: center;
+border: 1px solid black;
+transition: transform 300ms cubic-bezier(0.215, 0.610, 0.355, 1);
+box-shadow: 4px 13px 8px 0px rgba(34, 60, 80, 0.2);
+
+&:hover,
+&:focus {
+  box-shadow: 0px 8px 30px 0px rgba(212, 20, 67, 0.1);
+  transform: scale(1.1);
+  font-size: 18px;
+}
+}
+
+
+
+.photo-card > a {
+  height: 100%;
+  background-color: white;
+  text-decoration: none;
+  color: black ;
+}
+
+
+.info {
+  border-top: 1px solid black;
+
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+.end {
+  padding-bottom: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 25px;
+}
+
+
+.load-more {
+  display: block;
+  padding: 15px 20px;
+  font-size: 20px;
+}
+
+
+.end__text {
+  font-size: 30px;
+  color: #2800ff;
+}
+
+.is-hidden {
+  display: none;
+}
+

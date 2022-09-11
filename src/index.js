@@ -1,44 +1,89 @@
+
 import GalleryApiService from './js/api-servise';
 import { Notify } from 'notiflix';
 import axios from 'axios';
 import SimpleLightbox from "simplelightbox";
 import 'simplelightbox/dist/simple-lightbox.min.css';
 
+// На завтра : 1. пофиксить консоль лог (ошибка)
+
+
+
+
+
 const refs = {
   galleryWrap: document.querySelector('.gallery'),
   form: document.querySelector('#search-form'),
   loadMoreBtn: document.querySelector('.load-more'),
+  endText: document.querySelector(".end__text"),
 };
 
 const galleryApiService = new GalleryApiService();
-var lightbox = new SimpleLightbox('.gallery a', {   captionsData: "alt",
-captionDelay: 250, }); 
+let lightbox = {};
 
 
 refs.form.addEventListener('submit', onSearch);
 refs.loadMoreBtn.addEventListener('click', onLoadMore);
 
-function onSearch(e) {
+async function onSearch(e) {
   e.preventDefault();
 
   clearGalleryMarkup()
   galleryApiService.searchQuery = e.currentTarget.elements.searchQuery.value.trim();
   
   console.log(galleryApiService.searchQuery);
+
   if (!galleryApiService.searchQuery) {
     clearGalleryMarkup();
     Notify.warning('Please write something');
-    refs.form.reset()
+    refs.loadMoreBtn.classList.add("is-hidden");
+    refs.endText.classList.add("is-hidden");
+    refs.form.reset() 
     return;
-  };
+  }
+  
+  refs.loadMoreBtn.classList.add("is-hidden");
+  refs.endText.classList.add("is-hidden");
 
-  // galleryApiService.resetPage()
+  galleryApiService.resetPage()
 
+  const filesFromBackEnd = await galleryApiService.fetchGallery()
+  console.log(filesFromBackEnd.data.hits.length)
 
-galleryApiService.fetchGallery()
-  createGalleryMarkup(aaa);
+  createGalleryMarkup(filesFromBackEnd.data.hits);
+  onSubmitControl(filesFromBackEnd);
 
+  lightbox = new SimpleLightbox('.gallery a', {   captionsData: "alt",
+  captionDelay: 250, }); 
+
+refs.form.reset()
 }
+
+
+
+function onSubmitControl(filesFromBackEnd) {
+  if (filesFromBackEnd.data.total > 500) {
+    Notify.success(`Hooray! We found ${filesFromBackEnd.data.total} images, but we can only show the first ${filesFromBackEnd.data.totalHits}!`);
+    refs.loadMoreBtn.classList.remove("is-hidden");
+  }
+  else if (filesFromBackEnd.data.total > 40 && filesFromBackEnd.data.total <= 500 ) {
+    Notify.success(`Hooray! We found ${filesFromBackEnd.data.total} images!`);
+    refs.loadMoreBtn.classList.remove("is-hidden");
+    refs.endText.classList.add('is-hidden')
+  }
+else if(filesFromBackEnd.data.totalHits > 0 && filesFromBackEnd.data.totalHits <= 40) {
+  Notify.success(`Hooray! We found ${filesFromBackEnd.data.total} images!`);
+  refs.loadMoreBtn.classList.add("is-hidden");
+    refs.endText.classList.remove('is-hidden')
+}
+
+  else if (filesFromBackEnd.data.total === 0) { 
+    Notify.failure("Sorry, there are no images matching your search query. Please try again.");
+    refs.loadMoreBtn.classList.add("is-hidden");
+}
+}
+
+
 
 function createGalleryMarkup(cards) {
   console.log(cards);
@@ -56,7 +101,7 @@ function createGalleryMarkup(cards) {
           downloads,
         }) => `<div class="photo-card">
       <a href="${largeImageURL}">
-        <img src="${webformatURL}" alt="${tags}" loading="lazy" />
+        <img src="${webformatURL}" alt="${tags}" loading="lazy" height ="300" width = "400" />
         <div class="info">
           <p class="info-item">
             <b>Likes: ${likes}</b>
@@ -75,7 +120,7 @@ function createGalleryMarkup(cards) {
       </div>`
       )
       .join('')
-  );
+  )
 }
 
 function clearGalleryMarkup() {
@@ -83,9 +128,31 @@ function clearGalleryMarkup() {
 }
 
 async function onLoadMore() {
-  const getMorePhotos = await galleryApiService.fetchGallery();
-  createGalleryMarkup(getMorePhotos.data.hits)
+  const filesFromBackEnd = await galleryApiService.fetchGallery();
+  createGalleryMarkup(filesFromBackEnd.data.hits)
+  console.log(filesFromBackEnd.data.hits)
+  if (filesFromBackEnd.data.hits.length >= 0 && filesFromBackEnd.data.hits.length < 40) {
+    Notify.info("We're sorry, but you've reached the end of search results.");
+    refs.loadMoreBtn.classList.add("is-hidden");
+    refs.endText.classList.remove("is-hidden");
+  }
+  else if(galleryApiService.page === 13) {
+    Notify.info("We're sorry, but you've reached the end of search results.");
+    refs.loadMoreBtn.classList.add("is-hidden");
+    refs.endText.classList.remove("is-hidden");
+  }
+  lightbox.refresh()
 }
+
+
+
+
+
+
+
+
+
+
 
 // import SimpleLightbox from 'simplelightbox';
 // import 'simplelightbox/dist/simple-lightbox.min.css';
