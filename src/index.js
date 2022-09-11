@@ -1,26 +1,20 @@
-
 import GalleryApiService from './js/api-servise';
 import { Notify } from 'notiflix';
 import axios from 'axios';
-import SimpleLightbox from "simplelightbox";
+import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
 
 // На завтра : 1. пофиксить консоль лог (ошибка)
-
-
-
-
 
 const refs = {
   galleryWrap: document.querySelector('.gallery'),
   form: document.querySelector('#search-form'),
   loadMoreBtn: document.querySelector('.load-more'),
-  endText: document.querySelector(".end__text"),
+  endText: document.querySelector('.end__text'),
 };
 
 const galleryApiService = new GalleryApiService();
 let lightbox = {};
-
 
 refs.form.addEventListener('submit', onSearch);
 refs.loadMoreBtn.addEventListener('click', onLoadMore);
@@ -28,62 +22,66 @@ refs.loadMoreBtn.addEventListener('click', onLoadMore);
 async function onSearch(e) {
   e.preventDefault();
 
-  clearGalleryMarkup()
-  galleryApiService.searchQuery = e.currentTarget.elements.searchQuery.value.trim();
-  
+  clearGalleryMarkup();
+  galleryApiService.searchQuery =
+    e.currentTarget.elements.searchQuery.value.trim();
+
   console.log(galleryApiService.searchQuery);
 
   if (!galleryApiService.searchQuery) {
     clearGalleryMarkup();
     Notify.warning('Please write something');
-    refs.loadMoreBtn.classList.add("is-hidden");
-    refs.endText.classList.add("is-hidden");
-    refs.form.reset() 
+    refs.loadMoreBtn.classList.add('is-hidden');
+    refs.endText.classList.add('is-hidden');
+    refs.form.reset();
     return;
   }
-  
-  refs.loadMoreBtn.classList.add("is-hidden");
-  refs.endText.classList.add("is-hidden");
 
-  galleryApiService.resetPage()
+  refs.loadMoreBtn.classList.add('is-hidden');
+  refs.endText.classList.add('is-hidden');
 
-  const filesFromBackEnd = await galleryApiService.fetchGallery()
-  console.log(filesFromBackEnd.data.hits.length)
+  galleryApiService.resetPage();
+
+  const filesFromBackEnd = await galleryApiService.fetchGallery();
 
   createGalleryMarkup(filesFromBackEnd.data.hits);
   onSubmitControl(filesFromBackEnd);
 
-  lightbox = new SimpleLightbox('.gallery a', {   captionsData: "alt",
-  captionDelay: 250, }); 
+  lightbox = new SimpleLightbox('.gallery a', {
+    captionsData: 'alt',
+    captionDelay: 250,
+  });
 
-refs.form.reset()
+  refs.form.reset();
 }
-
-
 
 function onSubmitControl(filesFromBackEnd) {
   if (filesFromBackEnd.data.total > 500) {
-    Notify.success(`Hooray! We found ${filesFromBackEnd.data.total} images, but we can only show the first ${filesFromBackEnd.data.totalHits}!`);
-    refs.loadMoreBtn.classList.remove("is-hidden");
-  }
-  else if (filesFromBackEnd.data.total > 40 && filesFromBackEnd.data.total <= 500 ) {
+    Notify.success(
+      `Hooray! We found ${filesFromBackEnd.data.total} images, but we can only show the first ${filesFromBackEnd.data.totalHits}!`
+    );
+    refs.loadMoreBtn.classList.remove('is-hidden');
+  } else if (
+    filesFromBackEnd.data.total > 40 &&
+    filesFromBackEnd.data.total <= 500
+  ) {
     Notify.success(`Hooray! We found ${filesFromBackEnd.data.total} images!`);
-    refs.loadMoreBtn.classList.remove("is-hidden");
-    refs.endText.classList.add('is-hidden')
+    refs.loadMoreBtn.classList.remove('is-hidden');
+    refs.endText.classList.add('is-hidden');
+  } else if (
+    filesFromBackEnd.data.totalHits > 0 &&
+    filesFromBackEnd.data.totalHits <= 40
+  ) {
+    Notify.success(`Hooray! We found ${filesFromBackEnd.data.total} images!`);
+    refs.loadMoreBtn.classList.add('is-hidden');
+    refs.endText.classList.remove('is-hidden');
+  } else if (filesFromBackEnd.data.total === 0) {
+    Notify.failure(
+      'Sorry, there are no images matching your search query. Please try again.'
+    );
+    refs.loadMoreBtn.classList.add('is-hidden');
   }
-else if(filesFromBackEnd.data.totalHits > 0 && filesFromBackEnd.data.totalHits <= 40) {
-  Notify.success(`Hooray! We found ${filesFromBackEnd.data.total} images!`);
-  refs.loadMoreBtn.classList.add("is-hidden");
-    refs.endText.classList.remove('is-hidden')
 }
-
-  else if (filesFromBackEnd.data.total === 0) { 
-    Notify.failure("Sorry, there are no images matching your search query. Please try again.");
-    refs.loadMoreBtn.classList.add("is-hidden");
-}
-}
-
-
 
 function createGalleryMarkup(cards) {
   console.log(cards);
@@ -120,7 +118,7 @@ function createGalleryMarkup(cards) {
       </div>`
       )
       .join('')
-  )
+  );
 }
 
 function clearGalleryMarkup() {
@@ -129,30 +127,22 @@ function clearGalleryMarkup() {
 
 async function onLoadMore() {
   const filesFromBackEnd = await galleryApiService.fetchGallery();
-  createGalleryMarkup(filesFromBackEnd.data.hits)
-  console.log(filesFromBackEnd.data.hits)
-  if (filesFromBackEnd.data.hits.length >= 0 && filesFromBackEnd.data.hits.length < 40) {
+  createGalleryMarkup(filesFromBackEnd.data.hits);
+  console.log(filesFromBackEnd.data.hits);
+  if (
+    filesFromBackEnd.data.hits.length >= 0 &&
+    filesFromBackEnd.data.hits.length < 40
+  ) {
     Notify.info("We're sorry, but you've reached the end of search results.");
-    refs.loadMoreBtn.classList.add("is-hidden");
-    refs.endText.classList.remove("is-hidden");
-  }
-  else if(galleryApiService.page === 13) {
+    refs.loadMoreBtn.classList.add('is-hidden');
+    refs.endText.classList.remove('is-hidden');
+  } else if (galleryApiService.page === 13) {
     Notify.info("We're sorry, but you've reached the end of search results.");
-    refs.loadMoreBtn.classList.add("is-hidden");
-    refs.endText.classList.remove("is-hidden");
+    refs.loadMoreBtn.classList.add('is-hidden');
+    refs.endText.classList.remove('is-hidden');
   }
-  lightbox.refresh()
+  lightbox.refresh();
 }
-
-
-
-
-
-
-
-
-
-
 
 // import SimpleLightbox from 'simplelightbox';
 // import 'simplelightbox/dist/simple-lightbox.min.css';

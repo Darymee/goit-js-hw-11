@@ -4,10 +4,9 @@
   box-sizing: border-box;
 }
 
-body {   
+body {
   min-width: 1200px;
   font-family: monospace;
-
 }
 
 main {
@@ -54,14 +53,14 @@ button {
   padding: 10px 15px;
   background-color: white;
   &:hover,
-&:focus {
-  background-color: #00cce4;
-  box-shadow: 4px 13px 8px 0px rgba(34, 60, 80, 0.2);
-}}
-
+  &:focus {
+    background-color: #00cce4;
+    box-shadow: 4px 13px 8px 0px rgba(34, 60, 80, 0.2);
+  }
+}
 
 svg {
-  position: relative;
+  // position: relative;
   width: 15px;
   height: 15px;
 }
@@ -76,35 +75,31 @@ svg {
   flex-basis: calc((100% - 120px) / 4);
   margin: 15px;
 
-display: flex;
-justify-content: center;
-align-items: center;
-text-align: center;
-border: 1px solid black;
-transition: transform 300ms cubic-bezier(0.215, 0.610, 0.355, 1);
-box-shadow: 4px 13px 8px 0px rgba(34, 60, 80, 0.2);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  border: 1px solid black;
+  transition: transform 300ms cubic-bezier(0.215, 0.61, 0.355, 1);
+  box-shadow: 4px 13px 8px 0px rgba(34, 60, 80, 0.2);
 
-&:hover,
-&:focus {
-  box-shadow: 0px 8px 30px 0px rgba(212, 20, 67, 0.1);
-  transform: scale(1.1);
-  font-size: 18px;
+  &:hover,
+  &:focus {
+    box-shadow: 0px 8px 30px 0px rgba(212, 20, 67, 0.1);
+    transform: scale(1.1);
+    font-size: 18px;
+  }
 }
-}
-
-
 
 .photo-card > a {
   height: 100%;
   background-color: white;
   text-decoration: none;
-  color: black ;
+  color: black;
 }
-
 
 .info {
   border-top: 1px solid black;
-
 }
 
 img {
@@ -120,13 +115,11 @@ img {
   margin-top: 25px;
 }
 
-
 .load-more {
   display: block;
   padding: 15px 20px;
   font-size: 20px;
 }
-
 
 .end__text {
   font-size: 30px;
@@ -137,3 +130,39 @@ img {
   display: none;
 }
 
+.button-anchor {
+  position: fixed;
+  z-index: 5;
+  bottom: 9%;
+  right: 4%;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  height: 50px;
+  width: 50px;
+
+  background-color: transparent;
+  border: 3px solid #00aaff60;
+
+  border-radius: 50%;
+  opacity: 0.5;
+  cursor: pointer;
+
+  transition: border 300ms cubic-bezier(0.215, 0.61, 0.355, 1),
+    transform 300ms cubic-bezier(0.215, 0.61, 0.355, 1),
+    box-shadow 00ms cubic-bezier(0.215, 0.61, 0.355, 1),
+    opasity 300ms cubic-bezier(0.215, 0.61, 0.355, 1);
+
+  &:hover,
+  &:focus {
+    border: 3px solid #0066ffb5;
+    opacity: 1;
+    box-shadow: 0px 8px 30px 0px rgba(46, 20, 212, 0.1);
+    transform: scale(1.1);
+    background-color: aliceblue;
+  }
+}
+
+.button-anchor__icon {
+  width: 15px;
+}

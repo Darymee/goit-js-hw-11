@@ -9,7 +9,7 @@
   </head>
   <body>
     <!-- ❗️❗️❗️ Add partials like so for every page -->
-    <header class="header">
+    <header class="header" id="header">
       <form class="search-form" id="search-form">
         <input
           type="text"
@@ -25,11 +25,20 @@
       </form>
     </header>
     <main>
+      <a href="#header" class="button-anchor">
+        <img
+          class="button-anchor__icon"
+          src="./images/arrow-up.svg"
+          alt="arrow"
+          width="15"
+          height="15"
+        />
+      </a>
       <div class="gallery">
         <!-- .Карточки изображений -->
       </div>
       <div class="end">
-        <button type="button" class="load-more is-hidden"> Load more</button>
+        <button type="button" class="load-more is-hidden">Load more</button>
         <p class="end__text is-hidden">The End!</p>
       </div>
     </main>
