@@ -3,21 +3,30 @@ import { Notify } from 'notiflix';
 import axios from 'axios';
 import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
+import LoadMoreBtn from './js/load-more-button';
 
 // На завтра : 1. пофиксить консоль лог (ошибка)
 
 const refs = {
   galleryWrap: document.querySelector('.gallery'),
   form: document.querySelector('#search-form'),
-  loadMoreBtn: document.querySelector('.load-more'),
+  // loadMoreBtn: document.querySelector('.load-more'),
   endText: document.querySelector('.end__text'),
+  btn_anchor: document.querySelector('.button-anchor'),
 };
 
+console.log(refs.btn_anchor);
+const loadMoreBtn = new LoadMoreBtn({
+  cls: '.load-more',
+  hidden: true,
+});
 const galleryApiService = new GalleryApiService();
 let lightbox = {};
 
+console.log(loadMoreBtn);
+
 refs.form.addEventListener('submit', onSearch);
-refs.loadMoreBtn.addEventListener('click', onLoadMore);
+loadMoreBtn.refs.btn.addEventListener('click', onLoadMore);
 
 async function onSearch(e) {
   e.preventDefault();
@@ -31,13 +40,15 @@ async function onSearch(e) {
   if (!galleryApiService.searchQuery) {
     clearGalleryMarkup();
     Notify.warning('Please write something');
-    refs.loadMoreBtn.classList.add('is-hidden');
+    loadMoreBtn.hide();
     refs.endText.classList.add('is-hidden');
     refs.form.reset();
+    refs.btn_anchor.classList.add('is-hidden');
     return;
   }
 
-  refs.loadMoreBtn.classList.add('is-hidden');
+  loadMoreBtn.hide();
+
   refs.endText.classList.add('is-hidden');
 
   galleryApiService.resetPage();
@@ -45,6 +56,7 @@ async function onSearch(e) {
   const filesFromBackEnd = await galleryApiService.fetchGallery();
 
   createGalleryMarkup(filesFromBackEnd.data.hits);
+  loadMoreBtn.enable();
   onSubmitControl(filesFromBackEnd);
 
   lightbox = new SimpleLightbox('.gallery a', {
@@ -60,26 +72,30 @@ function onSubmitControl(filesFromBackEnd) {
     Notify.success(
       `Hooray! We found ${filesFromBackEnd.data.total} images, but we can only show the first ${filesFromBackEnd.data.totalHits}!`
     );
-    refs.loadMoreBtn.classList.remove('is-hidden');
+    loadMoreBtn.show();
+    refs.btn_anchor.classList.remove('is-hidden');
   } else if (
     filesFromBackEnd.data.total > 40 &&
     filesFromBackEnd.data.total <= 500
   ) {
     Notify.success(`Hooray! We found ${filesFromBackEnd.data.total} images!`);
-    refs.loadMoreBtn.classList.remove('is-hidden');
+    loadMoreBtn.show();
+    refs.btn_anchor.classList.remove('is-hidden');
     refs.endText.classList.add('is-hidden');
   } else if (
     filesFromBackEnd.data.totalHits > 0 &&
     filesFromBackEnd.data.totalHits <= 40
   ) {
     Notify.success(`Hooray! We found ${filesFromBackEnd.data.total} images!`);
-    refs.loadMoreBtn.classList.add('is-hidden');
+    loadMoreBtn.hide();
     refs.endText.classList.remove('is-hidden');
+    refs.btn_anchor.classList.remove('is-hidden');
   } else if (filesFromBackEnd.data.total === 0) {
     Notify.failure(
       'Sorry, there are no images matching your search query. Please try again.'
     );
-    refs.loadMoreBtn.classList.add('is-hidden');
+    loadMoreBtn.hide();
+    refs.btn_anchor.classList.add('is-hidden');
   }
 }
 
@@ -134,11 +150,11 @@ async function onLoadMore() {
     filesFromBackEnd.data.hits.length < 40
   ) {
     Notify.info("We're sorry, but you've reached the end of search results.");
-    refs.loadMoreBtn.classList.add('is-hidden');
+    loadMoreBtn.hide();
     refs.endText.classList.remove('is-hidden');
   } else if (galleryApiService.page === 13) {
     Notify.info("We're sorry, but you've reached the end of search results.");
-    refs.loadMoreBtn.classList.add('is-hidden');
+    loadMoreBtn.hide();
     refs.endText.classList.remove('is-hidden');
   }
   lightbox.refresh();
